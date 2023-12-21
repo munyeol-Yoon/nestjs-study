@@ -3,6 +3,8 @@ import {
   Delete,
   Get,
   HttpException,
+  Param,
+  ParseIntPipe,
   Patch,
   Post,
   Put,
@@ -38,7 +40,13 @@ export class CatsController {
   }
 
   @Get(':id')
-  getOneCat() {
+  getOneCat(@Param('id', ParseIntPipe) param: number) {
+    /**
+     * 기본적으로 param 은 string 으로 전달된다.
+     * id 를 number 타입으로 쓸 때가 많은데 이를 바꿔주는 것을 pipe를 통해 해결할 수 있다. -> @Param('id', ParseIntPipe) param
+     */
+    console.log(param);
+    console.log(typeof param); // string
     return 'one cat';
   }
 
