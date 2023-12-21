@@ -1,7 +1,18 @@
-import { Controller, Delete, Get, Patch, Post, Put } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  Patch,
+  Post,
+  Put,
+  UseFilters,
+} from '@nestjs/common';
 import { CatsService } from './cats.service';
+import { HttpExceptionFilter } from 'src/http-exception.filter';
 
 @Controller('cats')
+@UseFilters(HttpExceptionFilter) // 해당 컨트롤러에서 전달된 에러가 filter 로 처리된다.
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
   /**
@@ -16,7 +27,13 @@ export class CatsController {
    */
 
   @Get()
+  // @UseFilters(HttpExceptionFilter) // 해당 라우터에서 전달된 에러가 filter 로 처리된다.
   getAllCat() {
+    // 기본 에러 처리
+    throw new HttpException('api is broken', 401);
+    // 커스텀
+    // throw new HttpException({ success: false, message: 'api is broken' }, 401);
+    // 다른곳에서도 비슷한 예외처리를 한다면 반복되고 비효율적이다. 재사용성을 고려해 필터링을 거쳐 리스폰스로 반환해주는 형식으로 만들 수 있다.
     return 'all cat';
   }
 

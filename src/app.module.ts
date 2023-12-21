@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './logger/logger.middleware';
+import { CatsModule } from './cats/cats.module';
 
 // Module 데코레이터는 애플리케이션의 구조를 정의하는데 사용된다.
 /**
@@ -12,7 +13,7 @@ import { LoggerMiddleware } from './logger/logger.middleware';
  * global : 모듈을 글로벌 모듈로 만든다. 글로벌 모듈로 설정된 모듈은 애플리케이션의 모든 곳에서 가져올 필요 없이 사용할 수 있다. -> 공통적으로 사용되는 기능을 전역적으로 제공할 때 사용
  */
 @Module({
-  imports: [],
+  imports: [CatsModule],
   controllers: [AppController],
   providers: [AppService],
 })

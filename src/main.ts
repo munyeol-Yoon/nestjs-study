@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +11,9 @@ async function bootstrap() {
    * create<T extends INestApplication = INestApplication>(module: any, httpAdapter: AbstractHttpAdapter, options?: NestApplicationOptions): Promise<T>;
    * createMicroservice<T extends object>(moduleCls: any, options?: NestMicroserviceOptions & T): Promise<INestMicroservice>;
    */
+
+  app.useGlobalFilters(new HttpExceptionFilter()); // 이 애플리케이션에 에러 필터링을 추가해 준다.
+
   await app.listen(3000);
 }
 bootstrap();
