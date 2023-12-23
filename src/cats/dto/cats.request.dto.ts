@@ -4,19 +4,12 @@
  * request 와 response 용 DTO 는 view 를 위한 클래스이다.
  */
 
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { PickType } from '@nestjs/swagger';
+import { Cat } from '../cats.schema';
 
 // 클래스로 사용해야 데코레이터 패턴을 적용할 수 있고 상속 등 재사용성을 증가 시킬 수 있다.
-export class CatRequestDto {
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  password: string;
-
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-}
+export class CatRequestDto extends PickType(Cat, [
+  'email',
+  'name',
+  'password',
+] as const) {}

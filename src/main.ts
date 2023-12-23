@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/exceptions/http-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,32 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe()); // class validation 등록
   app.useGlobalFilters(new HttpExceptionFilter()); // 이 애플리케이션에 에러 필터링을 추가해 준다.
+
+  /**
+   * DocumentBuilder : swagger 문서의 설정을 구축하는데 사용
+   * build : 설정을 완료하고 swagger 문서 설정 객체를 생성
+   *
+   * SwaggerModule.createDocument(app, config) :
+   * SwaggerModule 의 createDocument 를 사용해 Swagger 문서를 생성한다.
+   * OpenAPIObject : 생성된 swagger 문서의 타입 지정
+   * SwaggerModule.setup() : Swagger UI 설정
+   * 첫번째 인자 : swagger ui 가 호스팅될 경로
+   * 두번째 인자 : 인스턴스
+   * 세번째 인자 : 생성된 swagger 문서
+   */
+  const config = new DocumentBuilder()
+    .setTitle('C.I.C')
+    .setDescription('cat')
+    .setVersion('1.0.0')
+    .build();
+
+  const document: OpenAPIObject = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+
+  app.enableCors({
+    origin: true, // url
+    credentials: true, // front 에서도 이 부분들 true 로
+  });
 
   const PORT = process.env.PORT;
 
