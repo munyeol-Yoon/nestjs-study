@@ -4,9 +4,11 @@ import { HttpExceptionFilter } from './common/exceptions/http-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import * as expressBasicAuth from 'express-basic-auth';
+import * as path from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule); // multer static 파일 제공를 위해 NestExpressApplication 명시
   /**
    * NestFactory 는 create 메서드를 사용해 인스턴스를 생성한다. AppModule 을 인자로 받아, 애플리케이션의 모든 모듈, 컨트롤러, 서비스 등을 초기화하고 HTTP 서버를 설정
    * NestFactory 는 NestJS 애플리케이션의 생명주기를 관리하는 핵심 클래스로, 애플리케이션의 생성, 설정 및 실행을 책임진다.
@@ -27,6 +29,10 @@ async function bootstrap() {
       },
     }),
   ); // swagger 보안설정
+
+  app.useStaticAssets(path.join(__dirname, './common', 'uploads'), {
+    prefix: '/media',
+  });
   /**
    * DocumentBuilder : swagger 문서의 설정을 구축하는데 사용
    * build : 설정을 완료하고 swagger 문서 설정 객체를 생성
