@@ -14,6 +14,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter()); // 이 애플리케이션에 에러 필터링을 추가해 준다.
 
-  await app.listen(3000);
+  const PORT = process.env.PORT;
+
+  await app.listen(PORT);
 }
 bootstrap();
