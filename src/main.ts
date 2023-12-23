@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/exceptions/http-exception.filter';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,7 @@ async function bootstrap() {
    * createMicroservice<T extends object>(moduleCls: any, options?: NestMicroserviceOptions & T): Promise<INestMicroservice>;
    */
 
+  app.useGlobalPipes(new ValidationPipe()); // class validation 등록
   app.useGlobalFilters(new HttpExceptionFilter()); // 이 애플리케이션에 에러 필터링을 추가해 준다.
 
   const PORT = process.env.PORT;
