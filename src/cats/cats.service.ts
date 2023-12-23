@@ -8,10 +8,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Cat } from './cats.schema';
 import * as bcrypt from 'bcrypt';
+import { CatsRepository } from './cats.repository';
 
 @Injectable()
 export class CatsService {
-  constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) {}
+  constructor(private readonly catsRepository: CatsRepository) {}
   /**
    * mongoose 의존성 주입
    * @InjectModel 데코레이터는 해당 모델을 주입하기 위해 사용한다.
@@ -23,7 +24,7 @@ export class CatsService {
 
   async signUp(body: CatRequestDto) {
     const { email, name, password } = body;
-    const isCatExist = await this.catModel.exists({ email });
+    const isCatExist = await this.catsRepository.existsByEmail(email);
 
     if (isCatExist) {
       throw new UnauthorizedException('해당 고양이는 이미 존재합니다.');
@@ -32,7 +33,7 @@ export class CatsService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const cat = await this.catModel.create({
+    const cat = await this.catsRepository.create({
       email,
       name,
       password: hashedPassword,
