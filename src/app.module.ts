@@ -5,6 +5,7 @@ import { LoggerMiddleware } from './logger/logger.middleware';
 import { CatsModule } from './cats/cats.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import * as mongoose from 'mongoose';
 
 // Module 데코레이터는 애플리케이션의 구조를 정의하는데 사용된다.
 /**
@@ -31,7 +32,10 @@ import { ConfigModule } from '@nestjs/config';
  * .apply 를 호출해 미들웨어를 활성화하고 .forRoutes 를 통해 'cats' 경로에 대한 요청에만 미들웨어를 적용한다.
  */
 export class AppModule implements NestModule {
+  private readonly isDev: boolean = process.env.MODE === 'dev' ? true : false;
+
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('cats');
+    mongoose.set('debug', this.isDev); // mongoose 로그
   }
 }
