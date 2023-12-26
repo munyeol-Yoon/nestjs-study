@@ -66,6 +66,11 @@ export class CatsController {
     return this.authService.jwtLogin(data);
   }
 
+  /**
+   * @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats')))
+   * FilesInterceptor 를 사용해 파일을 업로드한다. image 는 클라이언트가 파일을 업로드할 때 사용하는 필드 이름,
+   * 10 은 동시에 업로드할 수 있는 최대 파일 수, multerOptions 는 파일 저장 방식과 관련된 설정이다.
+   */
   @ApiOperation({ summary: '이미지 업로드' })
   @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats'))) // 파일 업로드를 위해 사용 첫번째 인자는 fieldName, 두번째 인자는 options
   @UseGuards(JwtAuthGuard)
