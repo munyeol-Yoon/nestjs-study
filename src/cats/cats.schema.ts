@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { Document } from 'mongoose';
+import { Comments } from 'src/comments/comments.schema';
 
 const options: SchemaOptions = {
   timestamps: true,
@@ -58,10 +59,13 @@ export class Cat extends Document {
     email: string;
     name: string;
     imgUrl: string;
+    comments: Comments[];
   };
+
+  readonly comments: Comments[];
 }
 
-export const CatSchema = SchemaFactory.createForClass(Cat);
+export const _CatSchema = SchemaFactory.createForClass(Cat);
 
 /**
  * mongoose 스키마의 가상 필드 정의
@@ -72,11 +76,22 @@ export const CatSchema = SchemaFactory.createForClass(Cat);
  * 데이터 캡슐화 및 가공에 사용된다. 사용자에게 노출하고 싶은 특정 필드만을 선택적으로 반환한다.
  * 복잡한 연산을 수행할때도 사용된다. 계산이 필요한 필드나 다른 필드의 값을 기반으로 한 동적인 값을 생성할 때 사용될 수 있다.
  */
-CatSchema.virtual('readOnlyData').get(function (this: Cat) {
+_CatSchema.virtual('readOnlyData').get(function (this: Cat) {
   return {
     id: this.id,
     email: this.email,
     name: this.name,
     imgUrl: this.imgUrl,
+    comments: this.comments,
   };
 });
+
+_CatSchema.virtual('comments', {
+  ref: 'comments', // 관계 설정
+  localField: '_id',
+  foreignField: 'info', // 어떤 것을 기준으로 가져올 것인지
+});
+_CatSchema.set('toObject', { virtuals: true });
+_CatSchema.set('toJSON', { virtuals: true });
+
+export const CatSchema = _CatSchema;

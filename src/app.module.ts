@@ -7,7 +7,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { CommentsModule } from './comments/comments.module';
-import { CommentsModule } from './comments/comments.module';
 import * as mongoose from 'mongoose';
 
 // Module 데코레이터는 애플리케이션의 구조를 정의하는데 사용된다.
